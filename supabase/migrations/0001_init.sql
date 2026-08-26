@@ -32,6 +32,11 @@ create table if not exists public.pins (
 create index if not exists pins_user_taken_idx on public.pins (user_id, taken_at desc);
 create index if not exists pins_tags_idx on public.pins using gin (tags);
 
+-- RLS 정책만으로는 접근이 안 열립니다. PostgREST가 쓰는 anon/authenticated 롤에
+-- 테이블 자체 권한을 먼저 GRANT 해줘야 그 위의 RLS 정책이 의미가 있습니다.
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on public.pins to anon, authenticated;
+
 alter table public.pins enable row level security;
 
 drop policy if exists "pins_select_own" on public.pins;
