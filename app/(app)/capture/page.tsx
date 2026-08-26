@@ -166,12 +166,12 @@ export default function CapturePage() {
             <button
               onClick={close}
               style={{
-                width: 32,
-                height: 32,
+                width: 24,
+                height: 24,
                 borderRadius: "50%",
                 border: "none",
                 background: inkAlpha(0.08),
-                fontSize: 16,
+                fontSize: 12,
                 color: COLORS.ink,
                 cursor: "pointer",
               }}
@@ -241,12 +241,12 @@ export default function CapturePage() {
             <button
               onClick={close}
               style={{
-                width: 32,
-                height: 32,
+                width: 24,
+                height: 24,
                 borderRadius: "50%",
                 border: "none",
                 background: inkAlpha(0.08),
-                fontSize: 16,
+                fontSize: 12,
                 color: COLORS.ink,
                 cursor: "pointer",
               }}
