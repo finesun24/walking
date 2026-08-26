@@ -16,7 +16,7 @@ const MiniMap = dynamic(() => import("@/components/MiniMap"), { ssr: false });
 export default function PinDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { pins } = usePins();
+  const { pins, loading: pinsLoading } = usePins();
   const [pin, setPin] = useState<Pin | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
@@ -26,14 +26,21 @@ export default function PinDetailPage() {
       setPin(fromContext);
       return;
     }
+    if (pinsLoading) return;
+    let cancelled = false;
     const supabase = createClient();
     supabase
       .from("pins")
       .select("*")
       .eq("id", id)
       .single()
-      .then(({ data }) => setPin(data as Pin | null));
-  }, [id, pins]);
+      .then(({ data }) => {
+        if (!cancelled) setPin(data as Pin | null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id, pins, pinsLoading]);
 
   useEffect(() => {
     if (!pin) return;

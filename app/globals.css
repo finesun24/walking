@@ -32,6 +32,26 @@ input {
   font-family: inherit;
 }
 
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  position: relative;
+  background: #faf7f2;
+  /* transform establishes a containing block so position:fixed children
+     (bottom tab bar) stay within this column instead of the viewport. */
+  transform: translateZ(0);
+}
+
+@media (min-width: 481px) {
+  body {
+    background: #ede9e0;
+  }
+  .app-shell {
+    box-shadow: 0 0 60px rgba(28, 27, 24, 0.12);
+  }
+}
+
 @keyframes shimmer {
   0% {
     background-position: 200% 0;

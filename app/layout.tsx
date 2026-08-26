@@ -28,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko">
       <body>
-        {children}
+        <div className="app-shell">{children}</div>
         <RegisterSW />
       </body>
     </html>
