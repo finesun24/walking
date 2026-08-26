@@ -37,6 +37,11 @@ create index if not exists pins_tags_idx on public.pins using gin (tags);
 grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.pins to anon, authenticated;
 
+-- 기본 REPLICA IDENTITY(기본키만)로는 DELETE 이벤트의 old record에 user_id가
+-- 실려 오지 않아, Realtime의 `user_id=eq.<uid>` 필터가 이벤트를 걸러버린다.
+-- FULL로 바꿔야 삭제가 클라이언트에 실시간으로 반영된다.
+alter table public.pins replica identity full;
+
 alter table public.pins enable row level security;
 
 drop policy if exists "pins_select_own" on public.pins;
