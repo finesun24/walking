@@ -38,6 +38,7 @@ export function PinsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const supabase = supabaseRef.current;
     let channel: ReturnType<typeof supabase.channel> | null = null;
+    let cancelled = false;
 
     (async () => {
       const {
@@ -50,9 +51,13 @@ export function PinsProvider({ children }: { children: React.ReactNode }) {
       }
       setUserId(uid);
       await load(uid);
+      if (cancelled) return;
 
+      // Unique per mount so React StrictMode's double-invoke (or a fast
+      // unmount/remount) never tries to re-subscribe an already-subscribed
+      // channel of the same name.
       channel = supabase
-        .channel("pins-changes")
+        .channel(`pins-changes-${uid}-${Math.random().toString(36).slice(2)}`)
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "pins", filter: `user_id=eq.${uid}` },
@@ -76,6 +81,7 @@ export function PinsProvider({ children }: { children: React.ReactNode }) {
     })();
 
     return () => {
+      cancelled = true;
       if (channel) supabase.removeChannel(channel);
     };
   }, [load]);
